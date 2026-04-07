@@ -27,7 +27,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="navbar navbar-dark bg-primary py-5">
+            <nav className="navbar navbar-dark bg-primary py-3">
                 <div className="container-fluid px-4 d-flex align-items-center">
                     <div className="flex-grow-1 ps-3">
                         <Link className="navbar-brand fw-bold text-white text-decoration-none" to="/">VolunThings</Link>
@@ -42,10 +42,10 @@ const Navbar = () => {
                         <i className="bi bi-list"></i>
                     </button>
                     <div className="d-none d-lg-flex align-items-center gap-4">
-                        <ul className="navbar-nav d-flex flex-row gap-3 mb-0">
+                        <ul className="navbar-nav d-flex flex-row gap-4 mb-0">
                             {navLinks.map(({ to, label }) => (
                                 <li className="nav-item" key={to}>
-                                    <Link className="nav-link text-white fw-semibold nav-custom-link" to={to}>{label}</Link>
+                                    <Link className="nav-link text-white fw-semibold nav-custom-link p-2" to={to}>{label}</Link>
                                 </li>
                             ))}
                         </ul>
