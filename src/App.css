@@ -67,3 +67,44 @@
   background: rgba(255, 255, 255, 0.15);
   color: white;
 }
+
+/* Materials styles */
+
+.carousel-container {
+  height: 180px;
+}
+
+.carousel-image {
+  object-fit: cover;
+  transition: opacity 0.4s ease;
+}
+
+.carousel-dot {
+  width: 7px;
+  height: 7px;
+}
+
+.carousel-arrow {
+  color: #fff;
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+  transform: translateY(-50%);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  opacity: 0.85;
+}
+
+.carousel-arrow-prev {
+  margin-left: 6px;
+}
+
+.carousel-arrow-next {
+  margin-right: 6px;
+}
+
+.carousel-arrow:hover {
+  transform: translateY(-50%) scale(1.4);
+  opacity: 1;
+}
