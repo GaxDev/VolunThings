@@ -17,8 +17,8 @@ export const createMaterial = (
     images.forEach((file) => formData.append("images", file));
 
     return api
-        .post<Material>("/api/materials", formData, {
+        .post<{ ok: boolean; data: Material }>("/api/materials", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         })
-        .then((res) => res.data);
+        .then((res) => res.data.data);
 };
