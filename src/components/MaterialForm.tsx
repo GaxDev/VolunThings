@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import "./components.css";
 import type { IMaterial } from "../interfaces/IMaterial";
 
 const MAX_IMAGES = 6;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./components.css";
 import type { ILoan } from "../interfaces/ILoan";
 
 interface Props {
