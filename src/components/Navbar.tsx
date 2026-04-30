@@ -51,8 +51,9 @@ const Navbar = () => {
                         </ul>
                         <Search />
                     </div>
-                    <div className="flex-grow-1 d-none d-lg-flex justify-content-end pe-3">
+                    <div className="flex-grow-1 d-none d-lg-flex justify-content-end pe-3 gap-2">
                         <Link to="/login"><button className="btn btn-outline-light fw-bold">Iniciar sesión</button></Link>
+                        <Link to="/register"><button className="btn btn-light fw-bold">Registrarse</button></Link>
                     </div>
                 </div>
             </nav>
@@ -71,9 +72,12 @@ const Navbar = () => {
                         <Link key={to} to={to} className="sidebar-link" onClick={() => setSidebarOpen(false)}>{label}</Link>
                     ))}
                 </nav>
-                <div className="px-4 py-4 border-top border-primary">
+                <div className="px-4 py-4 border-top border-primary d-flex flex-column gap-2">
                     <Link to="/login" onClick={() => setSidebarOpen(false)}>
                         <button className="btn btn-outline-light fw-bold w-100">Iniciar sesión</button>
+                    </Link>
+                    <Link to="/register" onClick={() => setSidebarOpen(false)}>
+                        <button className="btn btn-light fw-bold w-100">Registrarse</button>
                     </Link>
                 </div>
             </div>
