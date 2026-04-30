@@ -3,8 +3,11 @@ import "../App.css";
 import type { Loan } from "../interfaces/ILoan";
 import { getLoans, createLoan, updateLoan, returnLoan, deleteLoan } from "../api/loans";
 import LoanForm from "../components/LoanForm";
+import Pagination from "../components/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+const ITEMS_PER_PAGE = 10;
 
 type SortKey = keyof Loan;
 type SortDir = "asc" | "desc";
@@ -19,6 +22,7 @@ const Loans = () => {
     const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
     const [sortKey, setSortKey] = useState<SortKey>("id");
     const [sortDir, setSortDir] = useState<SortDir>("asc");
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         getLoans().then((data) => setLoans(data));
@@ -58,6 +62,16 @@ const Loans = () => {
 
         return result;
     }, [loans, search, statusFilter, sortKey, sortDir]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, statusFilter]);
+
+    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+    const paginated = filtered.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     const handleSave = (loan: Omit<Loan, "id">) => {
         if (editingLoan) {
@@ -213,7 +227,7 @@ const Loans = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered.map((loan) => (
+                            {paginated.map((loan) => (
                                 <tr key={loan.id} className={`loan-row${selectedIds.has(loan.id) ? " loan-row-selected" : ""}`}>
                                     <td className="loan-td-check">
                                         <input
@@ -287,6 +301,12 @@ const Loans = () => {
                     </table>
                 </div>
             )}
+
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+            />
 
             {(showForm || editingLoan) && (
                 <LoanForm

@@ -3,6 +3,9 @@ import "../App.css";
 import type { Material } from "../interfaces/IMaterial";
 import { getMaterials, createMaterial } from "../api/materials";
 import MaterialForm from "../components/MaterialForm";
+import Pagination from "../components/Pagination";
+
+const ITEMS_PER_PAGE = 9;
 
 const Materials = () => {
     const [materials, setMaterials] = useState<Material[]>([]);
@@ -12,6 +15,7 @@ const Materials = () => {
     const [hoveredId, setHoveredId] = useState<number | null>(null);
     const [activeIndexes, setActiveIndexes] = useState<Record<number, number>>({});
     const [showForm, setShowForm] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const handleSaveMaterial = (newMaterial: Omit<Material, "id" | "created_at" | "images">, images: File[]) => {
         const tempId = Date.now();
@@ -86,6 +90,16 @@ const Materials = () => {
         });
     }, [materials, search, category, onlyAvailable]);
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, category, onlyAvailable]);
+
+    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+    const paginated = filtered.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
     return (
         <div className="container mt-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -142,7 +156,7 @@ const Materials = () => {
                 </div>
             ) : (
                 <div className="row g-4">
-                    {filtered.map((material) => {
+                    {paginated.map((material) => {
                         const images = material.images ?? [];
                         return (
                             <div className="col-12 col-sm-6 col-lg-4" key={material.id}>
@@ -216,6 +230,11 @@ const Materials = () => {
                     })}
                 </div>
             )}
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+            />
             {showForm && (
                 <MaterialForm
                     onClose={() => setShowForm(false)}
