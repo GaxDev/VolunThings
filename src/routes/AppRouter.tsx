@@ -5,6 +5,7 @@ import Materials from "../pages/Materials";
 import Loans from "../pages/Loans";
 import Navbar from "../components/Navbar";
 import Register from "../auth/Register";
+import Login from "../auth/Login";
 import { ToastContainer } from "react-toastify";
 
 const MainLayout = () => (
@@ -36,6 +37,7 @@ const AppRouter = () => {
           <Route path="/about" element={<About />} />
         </Route>
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
