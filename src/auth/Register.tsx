@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import "./Auth.css";
 import type { IRegister } from "../interfaces/IRegister";
+import { registerUser } from "../api/auth";
 
 const initialForm: IRegister = {
     name: "",
@@ -13,17 +15,31 @@ const initialForm: IRegister = {
 const Register = () => {
     const [form, setForm] = useState<IRegister>(initialForm);
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(form);
+        setLoading(true);
+        try {
+            await registerUser(form);
+            toast.success("Cuenta creada correctamente");
+            navigate("/login");
+        } catch (error: unknown) {
+            const msg =
+                (error as { response?: { data?: { error?: string } } })?.response?.data?.error ??
+                "Error al registrar la cuenta";
+            toast.error(msg);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    return (
+    return (<>
         <div className="auth-wrapper">
             <div className="auth-card">
                 <div className="auth-header">
@@ -101,8 +117,8 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-100 auth-submit">
-                        Registrarse
+                    <button type="submit" className="btn btn-primary w-100 auth-submit" disabled={loading}>
+                        {loading ? "Registrando..." : "Registrarse"}
                     </button>
                 </form>
 
@@ -111,7 +127,8 @@ const Register = () => {
                 </p>
             </div>
         </div>
-    );
+        <ToastContainer position="top-right" autoClose={3000} />
+    </>);
 };
 
 export default Register;
