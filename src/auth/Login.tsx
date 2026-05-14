@@ -1,22 +1,47 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import "./Auth.css";
 import type { ILogin } from "../interfaces/ILogin";
+import { loginUser } from "../api/auth";
 
 const Login = () => {
     const [form, setForm] = useState<ILogin>({ email: "", password: "" });
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(form);
+        setLoading(true);
+        try {
+            const data = await loginUser(form);
+            localStorage.setItem("token", data.token);
+            toast.success("Sesión iniciada correctamente");
+            const from = (location.state as { from?: string })?.from;
+            if (from) {
+                navigate(from, { replace: true });
+            } else if (window.history.length > 1) {
+                navigate(-1);
+            } else {
+                navigate("/");
+            }
+        } catch (error: unknown) {
+            const msg =
+                (error as { response?: { data?: { error?: string } } })?.response?.data?.error ??
+                "Error al iniciar sesión";
+            toast.error(msg);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    return (
+    return (<>
         <div className="auth-wrapper">
             <div className="auth-card">
                 <div className="auth-header">
@@ -64,8 +89,8 @@ const Login = () => {
                         </div>
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-100 auth-submit">
-                        Iniciar sesión
+                    <button type="submit" className="btn btn-primary w-100 auth-submit" disabled={loading}>
+                        {loading ? "Iniciando sesión..." : "Iniciar sesión"}
                     </button>
                 </form>
 
@@ -74,7 +99,8 @@ const Login = () => {
                 </p>
             </div>
         </div>
-    );
+        <ToastContainer position="top-right" autoClose={3000} />
+    </>);
 };
 
 export default Login;
